@@ -23,3 +23,6 @@ target/
 **/node_modules
 **/.vscode
 
+### qoder memory (do not commit to git) ###
+.qoder-memory/
+
