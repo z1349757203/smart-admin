@@ -45,6 +45,13 @@ export const useRoleStore = defineStore({
     deleteCheckedData(index) {
       this.checkedData.splice(index, 1);
     },
+    // 根据菜单ID移除选中项
+    removeCheckedData(menuId) {
+      const index = this.checkedData.findIndex((id) => id === menuId);
+      if (index !== -1) {
+        this.checkedData.splice(index, 1);
+      }
+    },
     // 取消选中本级以及子级
     deleteCheckedDataAndChildren(data) {
       let findIndex = this.checkedData.findIndex((val) => val === data.menuId);

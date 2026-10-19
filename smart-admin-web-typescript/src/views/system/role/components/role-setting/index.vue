@@ -27,7 +27,7 @@
   import { ref } from 'vue';
   import RoleDataScope from '../role-data-scope/index.vue';
   import RoleEmployeeList from '../role-employee-list/index.vue';
-  import RoleTree from '../role-tree/index.vue';
+  import RoleTree from '../role-tree-new/index.vue';
 
   defineProps({
     value: Number,
