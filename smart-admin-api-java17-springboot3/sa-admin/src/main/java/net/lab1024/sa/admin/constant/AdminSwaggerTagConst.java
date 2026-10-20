@@ -59,5 +59,11 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
     }
 
+    public static class Payment {
+
+        public static final String PAYMENT_TRANSACTION = "支付交易-交易管理";
+
+    }
+
 
 }

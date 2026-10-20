@@ -1,7 +1,7 @@
 CREATE TABLE t_adv_bc (
   id bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  department_id bigint(20) NOT NULL COMMENT '部门id',
-  enterprise_id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '企业ID',
+  department_id bigint NOT NULL COMMENT '部门id',
+  customer_id bigint NOT NULL COMMENT '企业ID',
   platform_id bigint NOT NULL DEFAULT '0' COMMENT '厂商平台ID',
   bc_id varchar(32) NOT NULL COMMENT '商务中心ID',
   bc_name varchar(50) NOT NULL COMMENT '商务中心名称',
@@ -10,31 +10,159 @@ CREATE TABLE t_adv_bc (
   registered_area varchar(50) DEFAULT NULL COMMENT '商务中心注册地代码',
   timezone varchar(50) DEFAULT NULL COMMENT '商务中心所在时区',
   type varchar(50) DEFAULT NULL COMMENT '商务中心类型（NORMAL普通商务中心 DIRECT非自助直客商务中心 AGENCY非自助代理商商务中心 SELF_SERVICE自助直客商务中心 SELF_SERVICE_AGENCY自助代理商商务中心）',
-  bc_status VARCHAR(30) NOT NULL COMMENT '商务中心状态(REVIEWING审核中，DENY已拒绝，ENABLE已通过，PUNISH已禁用)'
+  bc_status VARCHAR(30) NOT NULL COMMENT '商务中心状态(REVIEWING审核中，DENY已拒绝，ENABLE已通过，PUNISH已禁用)',
   deleted_flag tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除状态',
-  create_by bigint NOT NULL COMMENT '创建人ID',
-  create_name varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '创建人名称',
+  create_user_id bigint NOT NULL COMMENT '创建人ID',
+  create_user_name varchar(50) NOT NULL COMMENT '创建人',
   create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  last_modify_by bigint DEFAULT NULL COMMENT '创建人ID',
-  last_modify_name varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '修改人',
-  last_modify_time datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  update_user_id bigint NOT NULL COMMENT '修改人ID',
+  update_user_name varchar(50) NOT NULL COMMENT '修改人',
+  update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (id) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1707641509819514883 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='商务中心BC表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='商务中心BC表';
 
 CREATE TABLE t_adv_account (
   id bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  department_id bigint(20) NOT NULL COMMENT '部门id',
-  enterprise_id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '企业ID',
+  department_id bigint NOT NULL COMMENT '部门id',
+  customer_id bigint NOT NULL COMMENT '企业ID',
   platform_id bigint NOT NULL DEFAULT '0' COMMENT '厂商平台ID',
-  bc_id varchar(32) DEFAULT NULL COMMENT '商务中心ID',
+  owner_bc_id varchar(32) DEFAULT NULL COMMENT '所属商务中心ID',
+  account_id varchar(50) DEFAULT NULL COMMENT '广告账户ID',
+  account_name varchar(50) DEFAULT NULL COMMENT '广告账户名称',
+  company_name varchar(50) DEFAULT NULL COMMENT '广告账号公司名',
+  status varchar(30) DEFAULT NULL COMMENT '广告账号状态',
+  currency varchar(20) DEFAULT NULL COMMENT '广告账号使用的货币类型',
+  timezone varchar(30) DEFAULT NULL COMMENT '广告账号时区',
+  balance decimal(30, 6) NULL DEFAULT NULL COMMENT '	广告账户总余额',
+  rejection_reason varchar(50) DEFAULT NULL COMMENT '审核拒绝原因',
+  industry varchar(30) DEFAULT NULL COMMENT '广告账号行业类别代码',
+  country varchar(30) DEFAULT NULL COMMENT '广告账号注册地代码',
   deleted_flag tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除状态',
-  create_by bigint NOT NULL COMMENT '创建人ID',
-  create_name varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '创建人名称',
+  create_user_id bigint NOT NULL COMMENT '创建人ID',
+  create_user_name varchar(50) NOT NULL COMMENT '创建人',
   create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  last_modify_by bigint DEFAULT NULL COMMENT '创建人ID',
-  last_modify_name varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '修改人',
-  last_modify_time datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  update_user_id bigint NOT NULL COMMENT '修改人ID',
+  update_user_name varchar(50) NOT NULL COMMENT '修改人',
+  update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (id) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1707641509819514883 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='广告账户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='广告账户表';
+
+CREATE TABLE t_adv_payment_config (
+  id bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  platform_id bigint NOT NULL DEFAULT '0' COMMENT '厂商平台ID',
+  pay_type TINYINT DEFAULT NULL COMMENT '支付方式：0-线下，1-线上',
+  payment_platform_name varchar(30) DEFAULT NULL COMMENT '支付平台名称',
+  fixed_exchange_rate DECIMAL(18,6) DEFAULT NULL COMMENT '固定汇率',
+  handling_fee_ratio DECIMAL(18,6) DEFAULT NULL COMMENT '手续费比例',
+  vat_ratio DECIMAL(18,6) DEFAULT NULL COMMENT '增值税比例',
+  payment_config text DEFAULT NULL COMMENT '支付平台配置信息',
+  logo_url varchar(255) DEFAULT NULL COMMENT '图标地址',
+  description varchar(255) DEFAULT NULL COMMENT '描述',
+  sort int(3) NULL DEFAULT NULL COMMENT '排序',
+  disabled_flag tinyint(1) NOT NULL DEFAULT '0' COMMENT '禁用状态',
+  deleted_flag tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除状态',
+  create_user_id bigint NOT NULL COMMENT '创建人ID',
+  create_user_name varchar(50) NOT NULL COMMENT '创建人',
+  create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  update_user_id bigint NOT NULL COMMENT '修改人ID',
+  update_user_name varchar(50) NOT NULL COMMENT '修改人',
+  update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (id) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='支付配置表';
+
+CREATE TABLE t_adv_customer (
+  id bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  department_id bigint NOT NULL COMMENT '部门id',
+  platform_id bigint NOT NULL DEFAULT '0' COMMENT '厂商平台ID',
+  customer_name varchar(100) DEFAULT NULL COMMENT '客户名称',
+  simple_name varchar(100) DEFAULT NULL COMMENT '客户简称',
+  customer_phone varchar(20) DEFAULT NULL COMMENT '客户手机号',
+  customer_addr varchar(100) DEFAULT NULL COMMENT '客户地址',
+  customer_email varchar(20) DEFAULT NULL COMMENT '客户邮箱',
+  customer_detail varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '客户背景情况介绍',
+  parent_customer_id bigint(20) NULL DEFAULT NULL COMMENT '上级客户',
+  parent_customer_name varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '上级客户名称',
+  customer_type varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '客户类型（0=直客，1=代理）',
+  industry_code varchar(32) DEFAULT NULL COMMENT '行业编码',
+  registered_area varchar(32) DEFAULT NULL COMMENT '企业注册地代码',
+  uscc varchar(18) DEFAULT NULL COMMENT '统一社会信用代码(营业执照编号)',
+  license_url varchar(255) DEFAULT NULL COMMENT '营业执照图片地址',
+  status varchar(30) DEFAULT NULL COMMENT '客户状态',
+  deleted_flag tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除状态',
+  create_user_id bigint NOT NULL COMMENT '创建人ID',
+  create_user_name varchar(50) NOT NULL COMMENT '创建人名称',
+  create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  update_user_id bigint DEFAULT NULL COMMENT '修改人ID',
+  update_user_name varchar(50) DEFAULT NULL COMMENT '修改人名称',
+  update_time datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (id) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='客户企业表';
+
+
+CREATE TABLE t_adv_customer_qualification (
+  id bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  department_id bigint NOT NULL COMMENT '部门id',
+  platform_id bigint NOT NULL DEFAULT '0' COMMENT '厂商平台ID',
+  customer_id bigint DEFAULT NULL COMMENT '客户ID',
+  company_name varchar(100) DEFAULT NULL COMMENT '企业名称',
+  registered_area varchar(32) DEFAULT NULL COMMENT '企业注册地代码',
+  legal_rep_name varchar(100) DEFAULT NULL COMMENT '法定代表人姓名',
+  legal_rep_cert_type tinyint DEFAULT NULL COMMENT '法定代表人证件类型：1身份证，2护照等',
+  legal_rep_id_card varchar(32) DEFAULT NULL COMMENT '法定代表人证件号码',
+  legal_rep_email varchar(100) DEFAULT NULL COMMENT '法人邮箱',
+  legal_rep_mobile varchar(100) DEFAULT NULL COMMENT '法人联系电话',
+  legal_rep_bank_card_no varchar(32) DEFAULT NULL COMMENT '法人银联银行卡号',
+  legal_rep_bank_reserved_mobile varchar(20) DEFAULT NULL COMMENT '法人银行卡预留手机号',
+  legal_rep_bank_name varchar(100) DEFAULT NULL COMMENT '法人银行卡开户行名称',
+  kyc_union_verify_status varchar(30) DEFAULT NULL COMMENT '银联四要素核验状态(PENDING待核验,SUCCESS核验成功,FAIL核验失败)',
+  kyc_union_verify_time datetime DEFAULT NULL COMMENT '银联四要素核验时间',
+  deleted_flag tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除状态',
+  create_user_id bigint NOT NULL COMMENT '创建人ID',
+  create_user_name varchar(50) NOT NULL COMMENT '创建人名称',
+  create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  update_user_id bigint DEFAULT NULL COMMENT '修改人ID',
+  update_user_name varchar(50) DEFAULT NULL COMMENT '修改人名称',
+  update_time datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (id) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='客户资质表';
+
+
+CREATE TABLE t_adv_approve (
+  id bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  department_id bigint NOT NULL COMMENT '部门id',
+  enterprise_id bigint NOT NULL COMMENT '企业ID',
+  platform_id bigint DEFAULT NULL COMMENT '厂商平台ID',
+  approve_type varchar(20) NOT NULL COMMENT '审批类型：创建客户/开户/加款/减款/转账/钱包充值/钱包退款',
+  business_id bigint NOT NULL COMMENT '关联的业务表ID',
+  approve_definition_id varchar(32) DEFAULT NULL COMMENT '审批定义ID',
+  approve_instance_id varchar(32) DEFAULT NULL COMMENT '审批实例ID',
+  approve_status varchar(20) DEFAULT NULL COMMENT '审批状态 PENDING待审核/PASS审核通过/REJECT驳回',
+  approve_comment varchar(100) DEFAULT NULL COMMENT '审批意见',
+  deleted_flag tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除状态',
+  create_user_id bigint NOT NULL COMMENT '创建人ID',
+  create_user_name varchar(50) NOT NULL COMMENT '创建人',
+  create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  update_user_id bigint NOT NULL COMMENT '修改人ID',
+  update_user_name varchar(50) NOT NULL COMMENT '修改人',
+  update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (id) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='业务审批表';
+
+-- 基础数据
+-- CREATE TABLE t_adv_payment_config (
+--   id bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+--   department_id bigint NOT NULL COMMENT '部门id',
+--   enterprise_id bigint NOT NULL COMMENT '企业ID',
+--   platform_id bigint NOT NULL DEFAULT '0' COMMENT '厂商平台ID',
+--   bc_id varchar(32) DEFAULT NULL COMMENT '商务中心ID',
+--   deleted_flag tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除状态',
+--   create_user_id bigint NOT NULL COMMENT '创建人ID',
+--   create_user_name varchar(50) NOT NULL COMMENT '创建人',
+--   create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+--   update_user_id bigint NOT NULL COMMENT '修改人ID',
+--   update_user_name varchar(50) NOT NULL COMMENT '修改人',
+--   update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+--   PRIMARY KEY (id) USING BTREE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='广告账户表';
 
 

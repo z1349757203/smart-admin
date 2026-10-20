@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.payment.dao.PaymentTransactionDao">
+
+    <!-- 分页查询交易流水 -->
+    <select id="query" resultType="net.lab1024.sa.admin.module.payment.domain.vo.PaymentTransactionVO">
+        SELECT * FROM t_payment_transaction
+        <where>
+            deleted_flag = false
+            <if test="query.channelCode != null">
+                AND channel_code = #{query.channelCode}
+            </if>
+            <if test="query.tradeType != null">
+                AND trade_type = #{query.tradeType}
+            </if>
+            <if test="query.status != null">
+                AND status = #{query.status}
+            </if>
+            <if test="query.outTradeNo != null and query.outTradeNo != ''">
+                AND out_trade_no = #{query.outTradeNo}
+            </if>
+        </where>
+        <if test="query.sortItemList == null or query.sortItemList.size == 0">
+            ORDER BY transaction_id DESC
+        </if>
+    </select>
+
+    <!-- 根据商户订单号 + 交易类型 查询 -->
+    <select id="selectByOutTradeNo" resultType="net.lab1024.sa.admin.module.payment.domain.entity.PaymentTransactionEntity">
+        SELECT * FROM t_payment_transaction
+        WHERE out_trade_no = #{outTradeNo}
+          AND trade_type = #{tradeType}
+          AND deleted_flag = false
+        ORDER BY transaction_id DESC
+        LIMIT 1
+    </select>
+
+</mapper>
